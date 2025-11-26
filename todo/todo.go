@@ -1,9 +1,12 @@
 package todo
 
+import "time"
+
 type Todo struct {
-	ID    int
-	Title string
-	Done  bool
+	ID          int
+	Title       string
+	Done        bool
+	TimeCreated time.Time
 }
 
 type List struct {
