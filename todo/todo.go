@@ -6,7 +6,7 @@ type Todo struct {
 	ID          int
 	Title       string
 	Done        bool
-	TimeCreated time.Time
+	DateCreated time.Time
 }
 
 type List struct {
@@ -19,9 +19,10 @@ func NewList() *List {
 
 func (l *List) Add(title string) {
 	t := Todo{
-		ID:    len(l.items) + 1,
-		Title: title,
-		Done:  false,
+		ID:          len(l.items) + 1,
+		Title:       title,
+		Done:        false,
+		DateCreated: time.Now(),
 	}
 	l.items = append(l.items, t)
 }
