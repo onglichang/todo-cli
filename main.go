@@ -13,7 +13,11 @@ const dataFile = "todos.txt"
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("Usage: todo [add|list|done] <task>")
+		fmt.Println("Usage:")
+		fmt.Println("  todo add <task>         # Add a new task")
+		fmt.Println("  todo list               # List pending tasks")
+		fmt.Println("  todo list completed     # List completed tasks")
+		fmt.Println("  todo done <taskID>      # Mark a task as completed")
 		return
 	}
 
@@ -35,7 +39,19 @@ func main() {
 		fmt.Println("Added:", title)
 
 	case "list":
-		for _, item := range list.All() {
+		var items []todo.Todo
+		if len(os.Args) >= 3 && os.Args[2] == "completed" {
+			items = list.Completed()
+		} else {
+			items = list.All()
+		}
+
+		if len(items) == 0 {
+			fmt.Println("No tasks found.")
+			return
+		}
+
+		for _, item := range items {
 			status := " "
 			if item.Done {
 				status = "x"

@@ -69,20 +69,26 @@ func (l *List) Save(filename string) error {
 	}
 	defer file.Close()
 
+	// Write not done tasks first
 	for _, item := range l.items {
-		line := fmt.Sprintf(
-			"%d|%s|%v|%s\n",
-			item.ID,
-			item.Title,
-			item.Done,
-			item.DateCreated.Format(time.RFC3339),
-		)
-		_, err := file.WriteString(line)
-		if err != nil {
-			return err
+		if !item.Done {
+			line := fmt.Sprintf("%d|%s|%v|%s\n",
+				item.ID, item.Title, item.Done, item.DateCreated.Format(time.RFC3339))
+			file.WriteString(line)
 		}
 	}
+
+	// Then write done tasks
+	for _, item := range l.items {
+		if item.Done {
+			line := fmt.Sprintf("%d|%s|%v|%s\n",
+				item.ID, item.Title, item.Done, item.DateCreated.Format(time.RFC3339))
+			file.WriteString(line)
+		}
+	}
+
 	return nil
+
 }
 
 func (l *List) Add(title string) {
@@ -96,7 +102,24 @@ func (l *List) Add(title string) {
 }
 
 func (l *List) All() []Todo {
-	return l.items
+	var notDone []Todo
+	for _, item := range l.items {
+		if !item.Done {
+			notDone = append(notDone, item)
+		}
+	}
+	return notDone
+}
+
+// Return only completed tasks
+func (l *List) Completed() []Todo {
+	var done []Todo
+	for _, item := range l.items {
+		if item.Done {
+			done = append(done, item)
+		}
+	}
+	return done
 }
 
 func (l *List) Complete(id int) bool {
