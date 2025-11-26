@@ -9,14 +9,19 @@ import (
 	"github.com/onglichang/todo-cli/todo"
 )
 
+const dataFile = "todos.txt"
+
 func main() {
 	if len(os.Args) < 2 {
 		fmt.Println("Usage: todo [add|list|done] <task>")
 		return
 	}
 
-	command := os.Args[1]
+	// Create list and load existing data
 	list := todo.NewList()
+	list.Load(dataFile)
+
+	command := os.Args[1]
 
 	switch command {
 	case "add":
@@ -26,6 +31,7 @@ func main() {
 		}
 		title := os.Args[2]
 		list.Add(title)
+		list.Save(dataFile)
 		fmt.Println("Added:", title)
 
 	case "list":
@@ -50,6 +56,7 @@ func main() {
 		}
 		id, _ := strconv.Atoi(os.Args[2])
 		if list.Complete(id) {
+			list.Save(dataFile)
 			fmt.Println("Task completed!")
 		} else {
 			fmt.Println("Task not found.")
