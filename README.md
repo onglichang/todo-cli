@@ -110,7 +110,6 @@ todo-cli/
 ├── main.go
 ├── todo/
 │   ├── todo.go
-│   ├── file.go
 ├── todos.txt
 └── README.md
 ```
